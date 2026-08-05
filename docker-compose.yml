@@ -1,561 +1,1107 @@
-version: "3"
+# Auto-generated docker-compose for train-ticket, wired for MySQL + Nacos + Zipkin tracing.
+# Base images are pulled through mirror.gcr.io (Google's Docker Hub read-through mirror)
+# because this environment's egress policy blocks Docker Hub's blob CDN directly.
 
 services:
-  #  rabbitmq:
-  #    image: rabbitmq:management
-  #    ports:
-  #      - 5672:5672
-  #      - 15672:15672
-  #    networks:
-  #      - my-network
 
-  # kafka:
-  #   container_name: kafka
-  #   image: spotify/kafka:latest
-  #   ports:
-  #    - 2181:2181
-  #    - 9092:9092
-  #   networks:
-  #     - my-network
-
-  #  zipkin:
-  #    image: openzipkin/zipkin
-  #    ports:
-  #      - 9411:9411
-  #    networks:
-  #      - my-network
-
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
-    networks:
-      - my-network
-
-  ts-ui-dashboard:
-    build: ts-ui-dashboard
-    image: ${IMG_REPO}/ts-ui-dashboard:${IMG_TAG}
+  ts-mysql:
+    image: mirror.gcr.io/library/mysql:5.7
+    container_name: ts-mysql
     restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - my-network
-
-  ts-auth-service:
-    build: ts-auth-service
-    image: ${IMG_REPO}/ts-auth-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12340:12340
-    networks:
-      - my-network
-
-  ts-auth-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-user-service:
-    build: ts-user-service
-    image: ${IMG_REPO}/ts-user-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12342:12342
-    networks:
-      - my-network
-
-  ts-user-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-verification-code-service:
-    build: ts-verification-code-service
-    image: ${IMG_REPO}/ts-verification-code-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 15678:15678
-    networks:
-      - my-network
-
-  ts-account-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-route-service:
-    build: ts-route-service
-    image: ${IMG_REPO}/ts-route-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 11178:11178
-    networks:
-      - my-network
-
-  ts-route-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-contacts-service:
-    build: ts-contacts-service
-    image: ${IMG_REPO}/ts-contacts-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12347:12347
-    networks:
-      - my-network
-
-  ts-contacts-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-order-service:
-    build: ts-order-service
-    image: ${IMG_REPO}/ts-order-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12031:12031
-    networks:
-      - my-network
-
-  ts-order-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-order-other-service:
-    build: ts-order-other-service
-    image: ${IMG_REPO}/ts-order-other-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12032:12032
-    networks:
-      - my-network
-
-  ts-order-other-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-config-service:
-    build: ts-config-service
-    image: ${IMG_REPO}/ts-config-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 15679:15679
-    networks:
-      - my-network
-
-  ts-config-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-station-service:
-    build: ts-station-service
-    image: ${IMG_REPO}/ts-station-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12345:12345
-    networks:
-      - my-network
-
-  ts-station-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-train-service:
-    build: ts-train-service
-    image: ${IMG_REPO}/ts-train-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 14567:14567
-    networks:
-      - my-network
-
-  ts-train-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-travel-service:
-    build: ts-travel-service
-    image: ${IMG_REPO}/ts-travel-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12346:12346
-    networks:
-      - my-network
-
-  ts-travel-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-travel2-service:
-      build: ts-travel2-service
-      image: ${IMG_REPO}/ts-travel2-service:${IMG_TAG}
-      restart: always
-      ports:
-        - 16346:16346
-      networks:
-        - my-network
-
-  ts-travel2-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-preserve-service:
-    build: ts-preserve-service
-    image: ${IMG_REPO}/ts-preserve-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 14568:14568
-    networks:
-      - my-network
-
-  ts-preserve-other-service:
-    build: ts-preserve-other-service
-    image: ${IMG_REPO}/ts-preserve-other-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 14569:14569
-    networks:
-      - my-network
-
-  ts-basic-service:
-      build: ts-basic-service
-      image: ${IMG_REPO}/ts-basic-service:${IMG_TAG}
-      restart: always
-      ports:
-        - 15680:15680
-      networks:
-          - my-network
-
-  ts-ticketinfo-service:
-        build: ts-ticketinfo-service
-        image: ${IMG_REPO}/ts-ticketinfo-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 15681:15681
-        networks:
-          - my-network
-
-  ts-price-service:
-        build: ts-price-service
-        image: ${IMG_REPO}/ts-price-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 16579:16579
-        networks:
-          - my-network
-
-
-  ts-price-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-notification-service:
-        build: ts-notification-service
-        image: ${IMG_REPO}/ts-notification-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 17853:17853
-        networks:
-          - my-network
-
-  ts-security-service:
-        build: ts-security-service
-        image: ${IMG_REPO}/ts-security-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 11188:11188
-        networks:
-          - my-network
-
-  ts-security-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-inside-payment-service:
-        build: ts-inside-payment-service
-        image: ${IMG_REPO}/ts-inside-payment-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18673:18673
-        networks:
-          - my-network
-
-  ts-inside-payment-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-execute-service:
-        build: ts-execute-service
-        image: ${IMG_REPO}/ts-execute-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 12386:12386
-        networks:
-          - my-network
-
-  ts-payment-service:
-        build: ts-payment-service
-        image: ${IMG_REPO}/ts-payment-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 19001:19001
-        networks:
-          - my-network
-
-  ts-payment-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-rebook-service:
-        build: ts-rebook-service
-        image: ${IMG_REPO}/ts-rebook-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18886:18886
-        networks:
-          - my-network
-
-  ts-rebook-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-cancel-service:
-        build: ts-cancel-service
-        image: ${IMG_REPO}/ts-cancel-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18885:18885
-        networks:
-          - my-network
-
-  ts-assurance-service:
-        build: ts-assurance-service
-        image: ${IMG_REPO}/ts-assurance-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18888:18888
-        networks:
-          - my-network
-
-  ts-assurance-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-seat-service:
-        build: ts-seat-service
-        image: ${IMG_REPO}/ts-seat-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18898:18898
-        networks:
-          - my-network
-
-  ts-travel-plan-service:
-        build: ts-travel-plan-service
-        image: ${IMG_REPO}/ts-travel-plan-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 14322:14322
-        networks:
-          - my-network
-
-  ts-ticket-office-service:
-        build: ts-ticket-office-service
-        image: ${IMG_REPO}/ts-ticket-office-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 16108:16108
-        networks:
-          - my-network
-
-  ts-ticket-office-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-news-service:
-    build: ts-news-service
-    image: ${IMG_REPO}/ts-news-service:${IMG_TAG}
-    restart: always
-    ports:
-      - 12862:12862
-    networks:
-      - my-network
-
-  ts-news-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-voucher-mysql:
-    image: mysql
-    expose:
-      - "3306"
+    command: ["--max-connections=1000"]
     environment:
       MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./deployment/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
     networks:
       - my-network
 
-  ts-voucher-service:
-          build: ts-voucher-service
-          image: ${IMG_REPO}/ts-voucher-service:${IMG_TAG}
-          restart: always
-          ports:
-            - 16101:16101
-          depends_on:
-            - ts-voucher-mysql
-          volumes:
-            - /var/lib/mysql
-          networks:
-            - my-network
-
-  ts-food-map-service:
-        build: ts-food-map-service
-        image: ${IMG_REPO}/ts-food-map-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18855:18855
-        networks:
-          - my-network
-
-  ts-food-map-mongo:
-    image: mongo
+  nacos:
+    image: mirror.gcr.io/nacos/nacos-server:latest
+    container_name: nacos
+    restart: always
+    environment:
+      MODE: standalone
+    ports:
+      - "8848:8848"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8848/nacos/v1/console/health/readiness | grep -q UP"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
     networks:
       - my-network
 
-  ts-route-plan-service:
-          build: ts-route-plan-service
-          image: ${IMG_REPO}/ts-route-plan-service:${IMG_TAG}
-          restart: always
-          ports:
-            - 14578:14578
-          networks:
-            - my-network
-
-  ts-food-service:
-      build: ts-food-service
-      image: ${IMG_REPO}/ts-food-service:${IMG_TAG}
-      restart: always
-      ports:
-        - 18856:18856
-      networks:
-        - my-network
-
-  ts-consign-service:
-            build: ts-consign-service
-            image: ${IMG_REPO}/ts-consign-service:${IMG_TAG}
-            restart: always
-            ports:
-              - 16111:16111
-            networks:
-              - my-network
-
-  ts-consign-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-consign-price-service:
-            build: ts-consign-price-service
-            image: ${IMG_REPO}/ts-consign-price-service:${IMG_TAG}
-            restart: always
-            ports:
-              - 16110:16110
-            networks:
-              - my-network
-
-  ts-consign-price-mongo:
-    image: mongo
-    networks:
-      - my-network
-
-  ts-food-mongo:
-    image: mongo
+  zipkin:
+    image: mirror.gcr.io/openzipkin/zipkin
+    container_name: zipkin
+    restart: always
+    ports:
+      - "9411:9411"
     networks:
       - my-network
 
   ts-admin-basic-info-service:
-        build: ts-admin-basic-info-service
-        image: ${IMG_REPO}/ts-admin-basic-info-service:${IMG_TAG}
-        restart: always
-        ports:
-          - 18767:18767
-        networks:
-          - my-network
+    build:
+      context: ts-admin-basic-info-service
+    image: train-ticket/ts-admin-basic-info-service:zipkin
+    container_name: ts-admin-basic-info-service
+    restart: on-failure
+    ports:
+      - "18767:18767"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
 
   ts-admin-order-service:
-            build: ts-admin-order-service
-            image: ${IMG_REPO}/ts-admin-order-service:${IMG_TAG}
-            restart: always
-            ports:
-              - 16112:16112
-            networks:
-              - my-network
+    build:
+      context: ts-admin-order-service
+    image: train-ticket/ts-admin-order-service:zipkin
+    container_name: ts-admin-order-service
+    restart: on-failure
+    ports:
+      - "16112:16112"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
 
   ts-admin-route-service:
-              build: ts-admin-route-service
-              image: ${IMG_REPO}/ts-admin-route-service:${IMG_TAG}
-              restart: always
-              ports:
-                - 16113:16113
-              deploy:
-                replicas: 1
-                restart_policy:
-                  condition: on-failure
-              networks:
-                - my-network
+    build:
+      context: ts-admin-route-service
+    image: train-ticket/ts-admin-route-service:zipkin
+    container_name: ts-admin-route-service
+    restart: on-failure
+    ports:
+      - "16113:16113"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
 
   ts-admin-travel-service:
-                build: ts-admin-travel-service
-                image: ${IMG_REPO}/ts-admin-travel-service:${IMG_TAG}
-                restart: always
-                ports:
-                  - 16114:16114
-                deploy:
-                  replicas: 1
-                  restart_policy:
-                    condition: on-failure
-                networks:
-                  - my-network
+    build:
+      context: ts-admin-travel-service
+    image: train-ticket/ts-admin-travel-service:zipkin
+    container_name: ts-admin-travel-service
+    restart: on-failure
+    ports:
+      - "16114:16114"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
 
   ts-admin-user-service:
-    build: ts-admin-user-service
-    image: ${IMG_REPO}/ts-admin-user-service:${IMG_TAG}
-    restart: always
+    build:
+      context: ts-admin-user-service
+    image: train-ticket/ts-admin-user-service:zipkin
+    container_name: ts-admin-user-service
+    restart: on-failure
     ports:
-      - 16115:16115
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+      - "16115:16115"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-assurance-service:
+    build:
+      context: ts-assurance-service
+    image: train-ticket/ts-assurance-service:zipkin
+    container_name: ts-assurance-service
+    restart: on-failure
+    ports:
+      - "18888:18888"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      ASSURANCE_MYSQL_HOST: "ts-mysql"
+      ASSURANCE_MYSQL_PORT: "3306"
+      ASSURANCE_MYSQL_DATABASE: "ts-assurance-mysql"
+      ASSURANCE_MYSQL_USER: "root"
+      ASSURANCE_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-auth-service:
+    build:
+      context: ts-auth-service
+    image: train-ticket/ts-auth-service:zipkin
+    container_name: ts-auth-service
+    restart: on-failure
+    ports:
+      - "12340:12340"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      AUTH_MYSQL_HOST: "ts-mysql"
+      AUTH_MYSQL_PORT: "3306"
+      AUTH_MYSQL_DATABASE: "ts-auth-mysql"
+      AUTH_MYSQL_USER: "root"
+      AUTH_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-basic-service:
+    build:
+      context: ts-basic-service
+    image: train-ticket/ts-basic-service:zipkin
+    container_name: ts-basic-service
+    restart: on-failure
+    ports:
+      - "15680:15680"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-cancel-service:
+    build:
+      context: ts-cancel-service
+    image: train-ticket/ts-cancel-service:zipkin
+    container_name: ts-cancel-service
+    restart: on-failure
+    ports:
+      - "18885:18885"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-config-service:
+    build:
+      context: ts-config-service
+    image: train-ticket/ts-config-service:zipkin
+    container_name: ts-config-service
+    restart: on-failure
+    ports:
+      - "15679:15679"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      CONFIG_MYSQL_HOST: "ts-mysql"
+      CONFIG_MYSQL_PORT: "3306"
+      CONFIG_MYSQL_DATABASE: "ts-config-mysql"
+      CONFIG_MYSQL_USER: "root"
+      CONFIG_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-consign-price-service:
+    build:
+      context: ts-consign-price-service
+    image: train-ticket/ts-consign-price-service:zipkin
+    container_name: ts-consign-price-service
+    restart: on-failure
+    ports:
+      - "16110:16110"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      CONSIGN_PRICE_MYSQL_HOST: "ts-mysql"
+      CONSIGN_PRICE_MYSQL_PORT: "3306"
+      CONSIGN_PRICE_MYSQL_DATABASE: "ts-consign-price-mysql"
+      CONSIGN_PRICE_MYSQL_USER: "root"
+      CONSIGN_PRICE_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-consign-service:
+    build:
+      context: ts-consign-service
+    image: train-ticket/ts-consign-service:zipkin
+    container_name: ts-consign-service
+    restart: on-failure
+    ports:
+      - "16111:16111"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      CONSIGN_MYSQL_HOST: "ts-mysql"
+      CONSIGN_MYSQL_PORT: "3306"
+      CONSIGN_MYSQL_DATABASE: "ts-consign-mysql"
+      CONSIGN_MYSQL_USER: "root"
+      CONSIGN_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-contacts-service:
+    build:
+      context: ts-contacts-service
+    image: train-ticket/ts-contacts-service:zipkin
+    container_name: ts-contacts-service
+    restart: on-failure
+    ports:
+      - "12347:12347"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      CONTACTS_MYSQL_HOST: "ts-mysql"
+      CONTACTS_MYSQL_PORT: "3306"
+      CONTACTS_MYSQL_DATABASE: "ts-contacts-mysql"
+      CONTACTS_MYSQL_USER: "root"
+      CONTACTS_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-delivery-service:
+    build:
+      context: ts-delivery-service
+    image: train-ticket/ts-delivery-service:zipkin
+    container_name: ts-delivery-service
+    restart: on-failure
+    ports:
+      - "18808:18808"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      DELIVERY_MYSQL_HOST: "ts-mysql"
+      DELIVERY_MYSQL_PORT: "3306"
+      DELIVERY_MYSQL_DATABASE: "ts-delivery-mysql"
+      DELIVERY_MYSQL_USER: "root"
+      DELIVERY_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-execute-service:
+    build:
+      context: ts-execute-service
+    image: train-ticket/ts-execute-service:zipkin
+    container_name: ts-execute-service
+    restart: on-failure
+    ports:
+      - "12386:12386"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-food-delivery-service:
+    build:
+      context: ts-food-delivery-service
+    image: train-ticket/ts-food-delivery-service:zipkin
+    container_name: ts-food-delivery-service
+    restart: on-failure
+    ports:
+      - "18957:18957"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      FOOD_DELIVERY_MYSQL_HOST: "ts-mysql"
+      FOOD_DELIVERY_MYSQL_PORT: "3306"
+      FOOD_DELIVERY_MYSQL_DATABASE: "ts-food-delivery-mysql"
+      FOOD_DELIVERY_MYSQL_USER: "root"
+      FOOD_DELIVERY_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-food-service:
+    build:
+      context: ts-food-service
+    image: train-ticket/ts-food-service:zipkin
+    container_name: ts-food-service
+    restart: on-failure
+    ports:
+      - "18856:18856"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      FOOD_MYSQL_HOST: "ts-mysql"
+      FOOD_MYSQL_PORT: "3306"
+      FOOD_MYSQL_DATABASE: "ts-food-mysql"
+      FOOD_MYSQL_USER: "root"
+      FOOD_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-gateway-service:
+    build:
+      context: ts-gateway-service
+    image: train-ticket/ts-gateway-service:zipkin
+    container_name: ts-gateway-service
+    restart: on-failure
+    ports:
+      - "28888:18888"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-inside-payment-service:
+    build:
+      context: ts-inside-payment-service
+    image: train-ticket/ts-inside-payment-service:zipkin
+    container_name: ts-inside-payment-service
+    restart: on-failure
+    ports:
+      - "18673:18673"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      INSIDE_PAYMENT_MYSQL_HOST: "ts-mysql"
+      INSIDE_PAYMENT_MYSQL_PORT: "3306"
+      INSIDE_PAYMENT_MYSQL_DATABASE: "ts-inside-payment-mysql"
+      INSIDE_PAYMENT_MYSQL_USER: "root"
+      INSIDE_PAYMENT_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-notification-service:
+    build:
+      context: ts-notification-service
+    image: train-ticket/ts-notification-service:zipkin
+    container_name: ts-notification-service
+    restart: on-failure
+    ports:
+      - "17853:17853"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      NOTIFICATION_MYSQL_HOST: "ts-mysql"
+      NOTIFICATION_MYSQL_PORT: "3306"
+      NOTIFICATION_MYSQL_DATABASE: "ts-notification-mysql"
+      NOTIFICATION_MYSQL_USER: "root"
+      NOTIFICATION_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-order-other-service:
+    build:
+      context: ts-order-other-service
+    image: train-ticket/ts-order-other-service:zipkin
+    container_name: ts-order-other-service
+    restart: on-failure
+    ports:
+      - "12032:12032"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      ORDER_OTHER_MYSQL_HOST: "ts-mysql"
+      ORDER_OTHER_MYSQL_PORT: "3306"
+      ORDER_OTHER_MYSQL_DATABASE: "ts-order-other-mysql"
+      ORDER_OTHER_MYSQL_USER: "root"
+      ORDER_OTHER_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-order-service:
+    build:
+      context: ts-order-service
+    image: train-ticket/ts-order-service:zipkin
+    container_name: ts-order-service
+    restart: on-failure
+    ports:
+      - "12031:12031"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      ORDER_MYSQL_HOST: "ts-mysql"
+      ORDER_MYSQL_PORT: "3306"
+      ORDER_MYSQL_DATABASE: "ts-order-mysql"
+      ORDER_MYSQL_USER: "root"
+      ORDER_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-payment-service:
+    build:
+      context: ts-payment-service
+    image: train-ticket/ts-payment-service:zipkin
+    container_name: ts-payment-service
+    restart: on-failure
+    ports:
+      - "19001:19001"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      PAYMENT_MYSQL_HOST: "ts-mysql"
+      PAYMENT_MYSQL_PORT: "3306"
+      PAYMENT_MYSQL_DATABASE: "ts-payment-mysql"
+      PAYMENT_MYSQL_USER: "root"
+      PAYMENT_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-preserve-other-service:
+    build:
+      context: ts-preserve-other-service
+    image: train-ticket/ts-preserve-other-service:zipkin
+    container_name: ts-preserve-other-service
+    restart: on-failure
+    ports:
+      - "14569:14569"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-preserve-service:
+    build:
+      context: ts-preserve-service
+    image: train-ticket/ts-preserve-service:zipkin
+    container_name: ts-preserve-service
+    restart: on-failure
+    ports:
+      - "14568:14568"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-price-service:
+    build:
+      context: ts-price-service
+    image: train-ticket/ts-price-service:zipkin
+    container_name: ts-price-service
+    restart: on-failure
+    ports:
+      - "16579:16579"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      PRICE_MYSQL_HOST: "ts-mysql"
+      PRICE_MYSQL_PORT: "3306"
+      PRICE_MYSQL_DATABASE: "ts-price-mysql"
+      PRICE_MYSQL_USER: "root"
+      PRICE_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-rebook-service:
+    build:
+      context: ts-rebook-service
+    image: train-ticket/ts-rebook-service:zipkin
+    container_name: ts-rebook-service
+    restart: on-failure
+    ports:
+      - "18886:18886"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-route-plan-service:
+    build:
+      context: ts-route-plan-service
+    image: train-ticket/ts-route-plan-service:zipkin
+    container_name: ts-route-plan-service
+    restart: on-failure
+    ports:
+      - "14578:14578"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-route-service:
+    build:
+      context: ts-route-service
+    image: train-ticket/ts-route-service:zipkin
+    container_name: ts-route-service
+    restart: on-failure
+    ports:
+      - "11178:11178"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      ROUTE_MYSQL_HOST: "ts-mysql"
+      ROUTE_MYSQL_PORT: "3306"
+      ROUTE_MYSQL_DATABASE: "ts-route-mysql"
+      ROUTE_MYSQL_USER: "root"
+      ROUTE_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-seat-service:
+    build:
+      context: ts-seat-service
+    image: train-ticket/ts-seat-service:zipkin
+    container_name: ts-seat-service
+    restart: on-failure
+    ports:
+      - "18898:18898"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-security-service:
+    build:
+      context: ts-security-service
+    image: train-ticket/ts-security-service:zipkin
+    container_name: ts-security-service
+    restart: on-failure
+    ports:
+      - "11188:11188"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      SECURITY_MYSQL_HOST: "ts-mysql"
+      SECURITY_MYSQL_PORT: "3306"
+      SECURITY_MYSQL_DATABASE: "ts-security-mysql"
+      SECURITY_MYSQL_USER: "root"
+      SECURITY_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-station-food-service:
+    build:
+      context: ts-station-food-service
+    image: train-ticket/ts-station-food-service:zipkin
+    container_name: ts-station-food-service
+    restart: on-failure
+    ports:
+      - "18855:18855"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      STATION_FOOD_MYSQL_HOST: "ts-mysql"
+      STATION_FOOD_MYSQL_PORT: "3306"
+      STATION_FOOD_MYSQL_DATABASE: "ts-station-food-mysql"
+      STATION_FOOD_MYSQL_USER: "root"
+      STATION_FOOD_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-station-service:
+    build:
+      context: ts-station-service
+    image: train-ticket/ts-station-service:zipkin
+    container_name: ts-station-service
+    restart: on-failure
+    ports:
+      - "12345:12345"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      STATION_MYSQL_HOST: "ts-mysql"
+      STATION_MYSQL_PORT: "3306"
+      STATION_MYSQL_DATABASE: "ts-station-mysql"
+      STATION_MYSQL_USER: "root"
+      STATION_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-train-food-service:
+    build:
+      context: ts-train-food-service
+    image: train-ticket/ts-train-food-service:zipkin
+    container_name: ts-train-food-service
+    restart: on-failure
+    ports:
+      - "19999:19999"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      TRAIN_FOOD_MYSQL_HOST: "ts-mysql"
+      TRAIN_FOOD_MYSQL_PORT: "3306"
+      TRAIN_FOOD_MYSQL_DATABASE: "ts-train-food-mysql"
+      TRAIN_FOOD_MYSQL_USER: "root"
+      TRAIN_FOOD_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-train-service:
+    build:
+      context: ts-train-service
+    image: train-ticket/ts-train-service:zipkin
+    container_name: ts-train-service
+    restart: on-failure
+    ports:
+      - "14567:14567"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      TRAIN_MYSQL_HOST: "ts-mysql"
+      TRAIN_MYSQL_PORT: "3306"
+      TRAIN_MYSQL_DATABASE: "ts-train-mysql"
+      TRAIN_MYSQL_USER: "root"
+      TRAIN_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-travel-plan-service:
+    build:
+      context: ts-travel-plan-service
+    image: train-ticket/ts-travel-plan-service:zipkin
+    container_name: ts-travel-plan-service
+    restart: on-failure
+    ports:
+      - "14322:14322"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-travel-service:
+    build:
+      context: ts-travel-service
+    image: train-ticket/ts-travel-service:zipkin
+    container_name: ts-travel-service
+    restart: on-failure
+    ports:
+      - "12346:12346"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      TRAVEL_MYSQL_HOST: "ts-mysql"
+      TRAVEL_MYSQL_PORT: "3306"
+      TRAVEL_MYSQL_DATABASE: "ts-travel-mysql"
+      TRAVEL_MYSQL_USER: "root"
+      TRAVEL_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-travel2-service:
+    build:
+      context: ts-travel2-service
+    image: train-ticket/ts-travel2-service:zipkin
+    container_name: ts-travel2-service
+    restart: on-failure
+    ports:
+      - "16346:16346"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      TRAVEL2_MYSQL_HOST: "ts-mysql"
+      TRAVEL2_MYSQL_PORT: "3306"
+      TRAVEL2_MYSQL_DATABASE: "ts-travel2-mysql"
+      TRAVEL2_MYSQL_USER: "root"
+      TRAVEL2_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-user-service:
+    build:
+      context: ts-user-service
+    image: train-ticket/ts-user-service:zipkin
+    container_name: ts-user-service
+    restart: on-failure
+    ports:
+      - "12342:12342"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      USER_MYSQL_HOST: "ts-mysql"
+      USER_MYSQL_PORT: "3306"
+      USER_MYSQL_DATABASE: "ts-user-mysql"
+      USER_MYSQL_USER: "root"
+      USER_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-verification-code-service:
+    build:
+      context: ts-verification-code-service
+    image: train-ticket/ts-verification-code-service:zipkin
+    container_name: ts-verification-code-service
+    restart: on-failure
+    ports:
+      - "15678:15678"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+    networks:
+      - my-network
+
+  ts-wait-order-service:
+    build:
+      context: ts-wait-order-service
+    image: train-ticket/ts-wait-order-service:zipkin
+    container_name: ts-wait-order-service
+    restart: on-failure
+    ports:
+      - "17525:17525"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      NACOS_ADDRS: "nacos:8848"
+      SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411/"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: "1.0"
+      JAVA_OPTS: "-Xmx320m -Xss256k -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC"
+      WAIT_ORDER_MYSQL_HOST: "ts-mysql"
+      WAIT_ORDER_MYSQL_PORT: "3306"
+      WAIT_ORDER_MYSQL_DATABASE: "ts-wait-order-mysql"
+      WAIT_ORDER_MYSQL_USER: "root"
+      WAIT_ORDER_MYSQL_PASSWORD: "root"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+    networks:
+      - my-network
+
+  ts-voucher-service:
+    build:
+      context: ts-voucher-service
+    image: train-ticket/ts-voucher-service:zipkin
+    container_name: ts-voucher-service
+    restart: on-failure
+    ports:
+      - "16101:16101"
+    depends_on:
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      VOUCHER_MYSQL_HOST: "ts-mysql"
+      VOUCHER_MYSQL_PORT: "3306"
+      VOUCHER_MYSQL_DATABASE: "ts-voucher-mysql"
+      VOUCHER_MYSQL_USER: "root"
+      VOUCHER_MYSQL_PASSWORD: "root"
+      ORDER_SERVICE_URL: "http://ts-order-service:12031"
+      ORDER_OTHER_SERVICE_URL: "http://ts-order-other-service:12032"
+    networks:
+      - my-network
+
+  ts-ticket-office-service:
+    build:
+      context: ts-ticket-office-service
+    image: train-ticket/ts-ticket-office-service:zipkin
+    container_name: ts-ticket-office-service
+    restart: on-failure
+    ports:
+      - "16108:16108"
+    depends_on:
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      TICKET_OFFICE_MYSQL_HOST: "ts-mysql"
+      TICKET_OFFICE_MYSQL_PORT: "3306"
+      TICKET_OFFICE_MYSQL_DATABASE: "ts-ticket-office-mysql"
+      TICKET_OFFICE_MYSQL_USER: "root"
+      TICKET_OFFICE_MYSQL_PASSWORD: "root"
     networks:
       - my-network
 
   ts-avatar-service:
-    image: ${NAMESPACE}/ts-avatar-service:${TAG}
-    restart: always
+    build:
+      context: ts-avatar-service
+    image: train-ticket/ts-avatar-service:zipkin
+    container_name: ts-avatar-service
+    restart: on-failure
     ports:
-      - 17001:17001
+      - "17001:17001"
+    networks:
+      - my-network
+
+  ts-news-service:
+    build:
+      context: ts-news-service
+    image: train-ticket/ts-news-service:zipkin
+    container_name: ts-news-service
+    restart: on-failure
+    ports:
+      - "12862:12862"
+    networks:
+      - my-network
+
+  ts-ui-dashboard:
+    build:
+      context: ts-ui-dashboard
+    image: train-ticket/ts-ui-dashboard:zipkin
+    container_name: ts-ui-dashboard
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ts-gateway-service
     networks:
       - my-network
 
 networks:
   my-network:
-    # driver: overlay
     driver: bridge

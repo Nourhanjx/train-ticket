@@ -33,3 +33,6 @@ ENV/
 env.bak/
 venv.bak/
 
+
+# local-only: optional TLS-intercepting-proxy CA bundle for sandboxed builds (see Dockerfile COPY ca-bundle.cr[t])
+ca-bundle.crt

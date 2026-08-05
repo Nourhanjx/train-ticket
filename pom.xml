@@ -147,6 +147,16 @@
             <artifactId>apm-toolkit-logback-1.x</artifactId>
             <version>8.6.0</version>
         </dependency>
+
+        <!--        distributed tracing: sleuth generates/propagates trace and span ids, zipkin reporter ships them-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+        </dependency>
     </dependencies>
 
 

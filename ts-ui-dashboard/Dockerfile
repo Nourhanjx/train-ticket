@@ -1,4 +1,4 @@
-FROM openresty/openresty:trusty
+FROM mirror.gcr.io/openresty/openresty:trusty
 
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 

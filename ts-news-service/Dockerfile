@@ -1,4 +1,4 @@
-FROM mrrm/web.go
+FROM mirror.gcr.io/mrrm/web.go
 
 
 RUN mkdir -p /app

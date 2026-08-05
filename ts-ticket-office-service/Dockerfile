@@ -1,4 +1,4 @@
-FROM node
+FROM mirror.gcr.io/library/node
 
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
