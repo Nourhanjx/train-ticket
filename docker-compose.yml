@@ -45,6 +45,16 @@ services:
     image: mirror.gcr.io/openzipkin/zipkin
     container_name: zipkin
     restart: always
+    depends_on:
+      ts-mysql:
+        condition: service_healthy
+    environment:
+      STORAGE_TYPE: mysql
+      MYSQL_HOST: ts-mysql
+      MYSQL_TCP_PORT: "3306"
+      MYSQL_DB: zipkin
+      MYSQL_USER: root
+      MYSQL_PASS: root
     ports:
       - "9411:9411"
     networks:
